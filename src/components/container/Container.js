@@ -34,7 +34,7 @@ export default class ContainerComponent extends NestedComponent {
     return ContainerComponent.schema();
   }
 
-  build() {
+  build(state) {
     this.createElement();
     const labelAtTheBottom = this.component.labelPosition === 'bottom';
     if (!labelAtTheBottom) {
@@ -43,10 +43,11 @@ export default class ContainerComponent extends NestedComponent {
     if (!this.hasValue()) {
       this.dataValue = {};
     }
-    this.addComponents(this.getContainer(), this.dataValue);
+    this.addComponents(this.getContainer(), this.dataValue, null, state);
     if (labelAtTheBottom) {
       this.createLabel(this.element);
     }
+    this.attachLogic();
   }
 
   get emptyValue() {

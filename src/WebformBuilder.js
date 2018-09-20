@@ -1,11 +1,9 @@
-/* global $ */
-
 import Webform from './Webform';
 import dragula from 'dragula';
 import Tooltip from 'tooltip.js';
 import Components from './components/Components';
 import BuilderUtils from './utils/builder';
-import { getComponent } from './utils/utils';
+import { getComponent, bootstrapVersion } from './utils/utils';
 import EventEmitter from 'eventemitter2';
 import Promise from 'native-promise-only';
 import _ from 'lodash';
@@ -14,6 +12,7 @@ require('./components/builder');
 export default class WebformBuilder extends Webform {
   constructor(element, options) {
     super(element, options);
+    this.builderHeight = 0;
     this.dragContainers = [];
     this.sidebarContainers = [];
     this.updateDraggable = _.debounce(this.refreshDraggable.bind(this), 200);
@@ -44,10 +43,10 @@ export default class WebformBuilder extends Webform {
             type: 'htmlelement',
             internal: true,
             tag: 'div',
-            className: 'alert alert-info',
+            className: 'drag-and-drop-alert alert alert-info',
             attrs: [
               { attr: 'id', value: `${parent.id}-placeholder` },
-              { attr: 'style', value: 'text-align:center; margin-bottom: 0px;' },
+              { attr: 'style', value: 'text-align:center;' },
               { attr: 'role', value: 'alert' }
             ],
             content: 'Drag and Drop a form component'
@@ -156,11 +155,11 @@ export default class WebformBuilder extends Webform {
   scrollSidebar() {
     const newTop = (window.scrollY - this.sideBarTop) + this.options.sideBarScrollOffset;
     const shouldScroll = (newTop > 0);
-    if (shouldScroll && ((newTop + this.sideBarElement.offsetHeight) < this.element.offsetHeight)) {
+    if (shouldScroll && ((newTop + this.sideBarElement.offsetHeight) < this.builderHeight)) {
       this.sideBarElement.style.marginTop = `${newTop}px`;
     }
-    else if (shouldScroll && (this.sideBarElement.offsetHeight < this.element.offsetHeight)) {
-      this.sideBarElement.style.marginTop = `${this.element.offsetHeight - this.sideBarElement.offsetHeight}px`;
+    else if (shouldScroll && (this.sideBarElement.offsetHeight < this.builderHeight)) {
+      this.sideBarElement.style.marginTop = `${this.builderHeight - this.sideBarElement.offsetHeight}px`;
     }
     else {
       this.sideBarElement.style.marginTop = '0px';
@@ -181,6 +180,14 @@ export default class WebformBuilder extends Webform {
 
   get ready() {
     return this.builderReady;
+  }
+
+  setForm(form) {
+    this.emit('change', form);
+    return super.setForm(form).then(retVal => {
+      setTimeout(() => (this.builderHeight = this.element.offsetHeight), 200);
+      return retVal;
+    });
   }
 
   deleteComponent(component) {
@@ -314,8 +321,8 @@ export default class WebformBuilder extends Webform {
           }, [
             this.ce('div', {
               class: 'card-header panel-heading'
-            }, this.ce('h3', {
-              class: 'card-title panel-title'
+            }, this.ce('h4', {
+              class: 'card-title panel-title mb-0'
             }, this.t('Preview'))),
             this.ce('div', {
               class: 'card-body panel-body'
@@ -451,15 +458,18 @@ export default class WebformBuilder extends Webform {
     if (data) {
       const schema = JSON.parse(data);
       window.sessionStorage.removeItem('formio.clipboard');
+      BuilderUtils.uniquify(this._form, schema);
       component.parent.addComponent(schema, false, false, component.element.nextSibling);
+      this.form = this.schema;
     }
   }
 
   destroy() {
-    super.destroy();
+    const state = super.destroy();
     if (this.dragula) {
       this.dragula.destroy();
     }
+    return state;
   }
 
   /**
@@ -512,11 +522,8 @@ export default class WebformBuilder extends Webform {
       'data-target': `#group-${info.key}`
     }, this.text(info.title));
 
-    // See if we have bootstrap.js installed.
-    const hasBootstrapJS = (typeof $ === 'function') && (typeof $().collapse === 'function');
-
     // Add a listener when it is clicked.
-    if (!hasBootstrapJS) {
+    if (!bootstrapVersion()) {
       this.addEventListener(groupAnchor, 'click', (event) => {
         event.preventDefault();
         const clickedGroupId = event.target.getAttribute('data-target').replace('#group-', '');
@@ -567,7 +574,17 @@ export default class WebformBuilder extends Webform {
 
     let groupBodyClass = 'panel-collapse collapse';
     if (info.default) {
-      groupBodyClass += ' in show';
+      switch (bootstrapVersion()) {
+        case 4:
+          groupBodyClass += ' show';
+          break;
+        case 3:
+          groupBodyClass += ' in';
+          break;
+        default:
+          groupBodyClass += ' in show';
+          break;
+      }
     }
 
     info.panel = this.ce('div', {
@@ -711,8 +728,8 @@ export default class WebformBuilder extends Webform {
   }
 
   clear() {
-    super.clear();
     this.dragContainers = [];
+    return super.clear();
   }
 
   addComponentTo(parent, schema, element, sibling) {
@@ -849,9 +866,9 @@ export default class WebformBuilder extends Webform {
     this.builderReadyResolve();
   }
 
-  build() {
+  build(state) {
     this.buildSidebar();
-    super.build();
+    super.build(state);
     this.updateDraggable();
     this.formReadyResolve();
   }

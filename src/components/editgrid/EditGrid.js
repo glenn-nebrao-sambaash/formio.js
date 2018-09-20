@@ -52,8 +52,8 @@ export default class EditGridComponent extends NestedComponent {
   {% }) %}
   <div class="col-sm-2">
     <div class="btn-group pull-right">
-      <button class="btn btn-default editRow">Edit</button>
-      <button class="btn btn-danger removeRow">Delete</button>
+      <button class="btn btn-default btn-sm editRow">Edit</button>
+      <button class="btn btn-danger btn-sm removeRow">Delete</button>
     </div>
   </div>
 </div>`;
@@ -73,9 +73,9 @@ export default class EditGridComponent extends NestedComponent {
     return [];
   }
 
-  build() {
+  build(state) {
     if (this.options.builder) {
-      return super.build(true);
+      return super.build(state, true);
     }
     this.createElement();
     this.createLabel(this.element);
@@ -98,6 +98,7 @@ export default class EditGridComponent extends NestedComponent {
     this.createDescription(this.element);
     this.createAddButton();
     this.element.appendChild(this.errorContainer = this.ce('div', { class: 'has-error' }));
+    this.attachLogic();
   }
 
   buildTable(fromBuild) {
@@ -320,6 +321,15 @@ export default class EditGridComponent extends NestedComponent {
     this.buildTable();
   }
 
+  clearErrors(rowIndex) {
+    if (this.editRows[rowIndex] && Array.isArray(this.editRows[rowIndex].components)) {
+      this.editRows[rowIndex].components.forEach(comp => {
+        comp.setPristine(true);
+        comp.setCustomValidity('');
+      });
+    }
+  }
+
   cancelRow(rowIndex) {
     if (this.options.readOnly) {
       this.editRows[rowIndex].dirty = false;
@@ -331,8 +341,10 @@ export default class EditGridComponent extends NestedComponent {
       this.editRows[rowIndex].dirty = false;
       this.editRows[rowIndex].isOpen = false;
       this.editRows[rowIndex].data = this.dataValue[rowIndex];
+      this.clearErrors(rowIndex);
     }
     else {
+      this.clearErrors(rowIndex);
       this.removeChildFrom(this.editRows[rowIndex].element, this.tableElement);
       this.editRows.splice(rowIndex, 1);
     }

@@ -117,6 +117,8 @@
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#components-time">components/time</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/components/time/Time.js~TimeComponent.html">TimeComponent</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Time">Time</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#components-unknown">components/unknown</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/components/unknown/Unknown.js~UnknownComponent.html">UnknownComponent</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#components-url">components/url</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/components/url/Url.js~UrlComponent.html">UrlComponent</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Url">Url</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#components-well">components/well</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/components/well/Well.js~WellComponent.html">WellComponent</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Well">Well</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#contrib">contrib</a><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Contrib">Contrib</a></span></span></li>
@@ -127,6 +129,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-s3">s3</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-url">url</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utils">utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-boolValue">boolValue</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bootstrapVersion">bootstrapVersion</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-checkCalculated">checkCalculated</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-checkCondition">checkCondition</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-checkCustomConditional">checkCustomConditional</a></span></span></li>
@@ -4327,6 +4330,34 @@
           
           
           
+          <span class="code" data-ice="name"><span><a href="class/src/components/base/Base.js~BaseComponent.html#instance-method-attachLogic">attachLogic</a></span></span><span class="code" data-ice="signature">()</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
           <span class="code" data-ice="name"><span><a href="class/src/components/base/Base.js~BaseComponent.html#instance-method-attachRefreshOn">attachRefreshOn</a></span></span><span class="code" data-ice="signature">()</span>
         </p>
       </div>
@@ -4422,34 +4453,6 @@ to perform special functions.</p>
         <div data-ice="description"><p>Called before a submission is triggered allowing the components
 to perform special async functions.</p>
 </div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/components/base/Base.js~BaseComponent.html#instance-method-bootstrap4Theme">bootstrap4Theme</a></span></span><span class="code" data-ice="signature">(name: <span>*</span>): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
       </div>
     </td>
     <td>
@@ -4643,13 +4646,14 @@ to perform special async functions.</p>
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/components/base/Base.js~BaseComponent.html#instance-method-clear">clear</a></span></span><span class="code" data-ice="signature">()</span>
+          <span class="code" data-ice="name"><span><a href="class/src/components/base/Base.js~BaseComponent.html#instance-method-clear">clear</a></span></span><span class="code" data-ice="signature">(): <span>*</span></span>
         </p>
       </div>
       <div>
         
         
-        
+        <div data-ice="description"><p>Destroys and clears a component and returns the current state.</p>
+</div>
       </div>
     </td>
     <td>
@@ -5101,7 +5105,7 @@ to perform special async functions.</p>
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/components/base/Base.js~BaseComponent.html#instance-method-destroy">destroy</a></span></span><span class="code" data-ice="signature">()</span>
+          <span class="code" data-ice="name"><span><a href="class/src/components/base/Base.js~BaseComponent.html#instance-method-destroy">destroy</a></span></span><span class="code" data-ice="signature">(): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -7051,7 +7055,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber195">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber196">source</a></span></span>
     </span>
   </h3>
 
@@ -7095,7 +7099,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber187">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber188">source</a></span></span>
     </span>
   </h3>
 
@@ -7269,7 +7273,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber81">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber82">source</a></span></span>
     </span>
   </h3>
 
@@ -7313,7 +7317,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber72">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber73">source</a></span></span>
     </span>
   </h3>
 
@@ -7357,7 +7361,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber183">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber184">source</a></span></span>
     </span>
   </h3>
 
@@ -7443,7 +7447,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber203">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber204">source</a></span></span>
     </span>
   </h3>
 
@@ -7486,7 +7490,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber147">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber148">source</a></span></span>
     </span>
   </h3>
 
@@ -7530,7 +7534,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber155">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber156">source</a></span></span>
     </span>
   </h3>
 
@@ -7632,7 +7636,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber76">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber77">source</a></span></span>
     </span>
   </h3>
 
@@ -7676,7 +7680,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber178">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber179">source</a></span></span>
     </span>
   </h3>
 
@@ -7748,7 +7752,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber137">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber138">source</a></span></span>
     </span>
   </h3>
 
@@ -7814,7 +7818,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber268">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber269">source</a></span></span>
     </span>
   </h3>
 
@@ -7914,7 +7918,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber214">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber215">source</a></span></span>
     </span>
   </h3>
 
@@ -7970,7 +7974,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber207">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber208">source</a></span></span>
     </span>
   </h3>
 
@@ -8042,7 +8046,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber264">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber265">source</a></span></span>
     </span>
   </h3>
 
@@ -8113,7 +8117,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber133">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber134">source</a></span></span>
     </span>
   </h3>
 
@@ -8184,7 +8188,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber92">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber93">source</a></span></span>
     </span>
   </h3>
 
@@ -8239,7 +8243,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber88">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber89">source</a></span></span>
     </span>
   </h3>
 
@@ -8294,7 +8298,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber224">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber225">source</a></span></span>
     </span>
   </h3>
 
@@ -8365,7 +8369,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber96">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber97">source</a></span></span>
     </span>
   </h3>
 
@@ -8424,7 +8428,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber113">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber114">source</a></span></span>
     </span>
   </h3>
 
@@ -8483,7 +8487,7 @@ to perform special async functions.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber257">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/components/checkbox/Checkbox.js.html#lineNumber258">source</a></span></span>
     </span>
   </h3>
 

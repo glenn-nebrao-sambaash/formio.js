@@ -4,6 +4,94 @@ All notable changes to this project will be documented in this file
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.5.5
+### Fixed
+ - Downgrade whatwg-fetch to 2.0.4 so that this library can be used in node.js without an error being thrown.
+
+## 3.5.4
+### Fixed
+ - FOR-1712: Make sure that an empty time component does not trigger infinite onChange events.
+ - FOR-1711: Ensure that the builder does not execute conditionally hidden elements.
+ - FOR-1701: Fix empty check for datetime component which can be a data object.
+ - FOR-1287: Move field logic event trigger to build so context is set correctly and interpolate event so it will work with rowIndex.
+ - The styles for the phone number component with locale configurations for Bootstrap 4.
+ 
+### Added
+ - FOR-1663: Added collapsible and collapsed to the Panel and also added icon to show collapsed state.
+
+## 3.5.3
+### Fixed
+ - FOR-1586: Survery component input names.
+ - FOR-1363: Fixed issue where validations would fire twice when a button component is present.
+ - FOR-1650: Fixed problem where multiple "change" events would fire on form render.
+ - FOR-1581, FOR-1582: Fixed issues with Signature component would get in a bad state when conditional logic is applied."
+ - Problem where an error would get thrown for NumberComponent and "decimalSeperator" references.
+
+## 3.5.2
+### Fixed
+ - FOR-1675: Textarea not displaying whole its content in readOnly mode
+ - FOR-1417: Caching logic to return promises instead of resolved responses.
+ - Fixed problem where nested components would fire calculate value of children when it is conditionally hidden.
+ - FOR-1673: Problem where the refreshOn would only trigger first time.
+ - FOR-1389: Issue where you could not upload another file when one is removed.
+
+### Added
+ - FOR-672: Add uiquify step to copyComponent method.
+
+### Changed
+ - Update lodash@4.17.11, @babel/core@7.0.1, i18next@11.9.0, sinon@6.3.2, webpack@4.19.0, whatwg-fetch@3.0.0
+
+## 3.5.1
+### Fixed
+ - Issues where the PDF builder would not load.
+
+## 3.5.0
+### Fixed
+ - Problem where icon configurations would not get passed to sub forms.
+ - Issue when building tabs, they would reset to first tab.
+ - Adding data to add components when moving between tabs.
+ - Fixed a problem where clearOnHide would trigger when navigating between tabs.
+ - Fixed problem where extending forms would modify the Base forms.
+ - Panel style themes for Bootstrap 4 to be consistent with Bootstrap 3.
+ - Issue where the builder would resize continuously.
+
+### Changed
+ - Hide the label settings for Panels since they have a title field.
+ - Upgrade to Babel 8.0 compilations.
+ - Upgraded demo application to Bootstrap 4.
+ - Default size for EditGrid buttons to small.
+
+### Added
+ - URL component
+ - Ability to provide global icons using Formio.icons property.
+
+## 3.4.8
+### Fixed
+ - Problems where the builder sidebar would not collapse the first group causing style issues.
+ - FOR-1618: Fixed problems with infinite refresh loops when clearOnHide is used.
+ - FOR-1670: Fixed issue in EditGrid where errors would persist and not get cleared when a row is canceled.
+ - FOR-1665: Fixed issues where default hidden states would not be set for nested conditionals.
+ - Clear errors when components are hidden.
+
+### Added
+ - Option that adds the ability to add primary project id to the pdf download icon.
+ - A 'change' event to the webform builder anytime the schema changes.
+
+## 3.4.6, 3.4.7
+### Fixed
+ - Cosmetic changes with Bootstrap 4
+ - Fix namespacing of user tokens.
+
+### Changed
+ - i18next@11.7.0, sinon@6.2.0
+
+## 3.4.5
+### Fixed
+ - Issues with the setHidden not working since they were not added to containers.
+
+### Changed
+ - Upgrade flatpickr@4.5.2, ace@1.4.1
+
 ## 3.4.4
 ### Added
  - Better settings for webcam and make it initialize properly when switching modes.

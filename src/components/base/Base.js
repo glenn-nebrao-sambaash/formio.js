@@ -333,24 +333,6 @@ export default class BaseComponent extends Component {
       this.info = this.elementInfo();
     }
 
-    this.logic.forEach(logic => {
-      if (logic.trigger.type === 'event') {
-        this.root.on(logic.trigger.event, () => {
-          const newComponent = _.cloneDeep(this.originalComponent);
-          if (this.applyActions(logic.actions, logic.trigger.event, this.data, newComponent)) {
-            // If component definition changed, replace it.
-            if (!_.isEqual(this.component, newComponent)) {
-              this.component = newComponent;
-            }
-            this.redraw();
-          }
-        });
-      }
-    });
-
-    // Attach the refresh on events.
-    this.attachRefreshOn();
-
     // Allow anyone to hook into the component creation.
     this.hook('component');
   }
@@ -507,8 +489,13 @@ export default class BaseComponent extends Component {
       // Restore the value.
       this.restoreValue();
 
+      // Attach the refresh on events.
+      this.attachRefreshOn();
+
       this.autofocus();
     }
+
+    this.attachLogic();
   }
 
   attachRefreshOn() {
@@ -889,10 +876,6 @@ export default class BaseComponent extends Component {
   buildInput(container, value) {
     const input = this.createInput(container);
     input.value = value;
-  }
-
-  bootstrap4Theme(name) {
-    return (name === 'default') ? 'secondary' : name;
   }
 
   /**
@@ -1343,8 +1326,7 @@ export default class BaseComponent extends Component {
     if (!this.isBuilt) {
       return;
     }
-    this.clear();
-    this.build();
+    this.build(this.clear());
   }
 
   destroyInputs() {
@@ -1368,8 +1350,9 @@ export default class BaseComponent extends Component {
    * Remove all event handlers.
    */
   destroy() {
-    super.destroy();
+    const state = super.destroy() || {};
     this.destroyInputs();
+    return state;
   }
 
   /**
@@ -1420,7 +1403,7 @@ export default class BaseComponent extends Component {
    * @return {boolean}
    */
   conditionallyVisible(data) {
-    if (!this.hasCondition()) {
+    if (this.options.builder || !this.hasCondition()) {
       return true;
     }
     return FormioUtils.checkCondition(
@@ -1579,16 +1562,17 @@ export default class BaseComponent extends Component {
    *
    * @param show
    */
-  show(show) {
+  show(show, noClear) {
     if (
+      !this.options.builder &&
       this.options.hide &&
       this.options.hide[this.component.key]
     ) {
       show = false;
     }
     else if (
-      this.options.show &&
-      this.options.show[this.component.key]
+      this.options.builder ||
+      (this.options.show && this.options.show[this.component.key])
     ) {
       show = true;
     }
@@ -1603,7 +1587,9 @@ export default class BaseComponent extends Component {
 
     this._visible = show;
     this.showElement(show && !this.component.hidden);
-    this.clearOnHide(show);
+    if (!noClear) {
+      this.clearOnHide(show);
+    }
     return show;
   }
 
@@ -1914,7 +1900,9 @@ export default class BaseComponent extends Component {
    * Deletes the value of the component.
    */
   deleteValue() {
-    this.setValue(null);
+    this.setValue(null, {
+      noUpdateEvent: true
+    });
     _.unset(this.data, this.key);
   }
 
@@ -2397,9 +2385,13 @@ export default class BaseComponent extends Component {
     }
   }
 
+  /**
+   * Destroys and clears a component and returns the current state.
+   */
   clear() {
-    this.destroy();
+    const state = this.destroy() || {};
     this.empty(this.getElement());
+    return state;
   }
 
   /**
@@ -2476,5 +2468,23 @@ export default class BaseComponent extends Component {
    */
   removeChild(element) {
     this.removeChildFrom(element, this.element);
+  }
+
+  attachLogic() {
+    this.logic.forEach(logic => {
+      if (logic.trigger.type === 'event') {
+        const event = this.interpolate(logic.trigger.event);
+        this.on(event, () => {
+          const newComponent = _.cloneDeep(this.originalComponent);
+          if (this.applyActions(logic.actions, event, this.data, newComponent)) {
+            // If component definition changed, replace it.
+            if (!_.isEqual(this.component, newComponent)) {
+              this.component = newComponent;
+            }
+            this.redraw();
+          }
+        });
+      }
+    });
   }
 }

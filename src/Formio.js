@@ -406,7 +406,16 @@ export default class Formio {
    * @return {*}
    */
   getToken(options) {
-    return Formio.getToken(options);
+    return Formio.getToken(Object.assign({ formio: this }, this.options, options));
+  }
+
+  /**
+   * Sets the JWT token for this instance.
+   *
+   * @return {*}
+   */
+  setToken(token, options) {
+    return Formio.setToken(token, Object.assign({ formio: this }, this.options, options));
   }
 
   /**
@@ -688,7 +697,7 @@ export default class Formio {
 
     // Get the cached promise to save multiple loads.
     if (!opts.ignoreCache && method === 'GET' && Formio.cache.hasOwnProperty(cacheKey)) {
-      return Promise.resolve(Formio.cache[cacheKey]);
+      return Formio.cache[cacheKey];
     }
 
     // Set up and fetch request
@@ -717,7 +726,7 @@ export default class Formio {
     }
 
     const requestToken = options.headers.get('x-jwt-token');
-    return fetch(url, options)
+    const result = fetch(url, options)
       .then((response) => {
         // Allow plugins to respond.
         response = Formio.pluginAlter('requestResponse', response, Formio);
@@ -823,11 +832,6 @@ export default class Formio {
           resultCopy = copy(result);
         }
 
-        // Cache the response.
-        if (method === 'GET') {
-          Formio.cache[cacheKey] = resultCopy;
-        }
-
         return resultCopy;
       })
       .catch((err) => {
@@ -839,8 +843,20 @@ export default class Formio {
           err.message = `Could not connect to API server (${err.message})`;
           err.networkError = true;
         }
+
+        if (method === 'GET') {
+          delete Formio.cache[cacheKey];
+        }
+
         return Promise.reject(err);
       });
+
+    // Cache the response.
+    if (method === 'GET') {
+      Formio.cache[cacheKey] = result;
+    }
+
+    return result;
   }
 
   // Needed to maintain reverse compatability...

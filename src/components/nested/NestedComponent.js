@@ -17,12 +17,14 @@ export default class NestedComponent extends BaseComponent {
     this.collapsed = !!this.component.collapsed;
   }
 
-  build(showLabel) {
+  build(state, showLabel) {
     this.createElement();
     if (showLabel) {
       this.createLabel(this.element);
     }
-    this.addComponents();
+    this.addComponents(null, null, null, state);
+
+    this.attachLogic();
   }
 
   get defaultSchema() {
@@ -135,13 +137,13 @@ export default class NestedComponent extends BaseComponent {
    * @param component
    * @param data
    */
-  createComponent(component, options, data, before) {
+  createComponent(component, options, data, before, state) {
     options = options || this.options;
     data = data || this.data;
     const comp = Components.create(component, options, data, true);
     comp.parent = this;
     comp.root = this.root || this;
-    comp.build();
+    comp.build(state);
     comp.isBuilt = true;
     if (component.internal) {
       return comp;
@@ -173,16 +175,17 @@ export default class NestedComponent extends BaseComponent {
    * @param {HTMLElement} element - The DOM element to append this child to.
    * @param {Object} data - The submission data object to house the data for this component.
    * @param {HTMLElement} before - A DOM element to insert this element before.
+   * @param {Boolean} noAdd - If this component should just be created and not added to this nested component.
+   * @param {Object} state - The state of the component getting created.
    * @return {BaseComponent} - The created component instance.
    */
-  addComponent(component, element, data, before, noAdd) {
+  addComponent(component, element, data, before, noAdd, state) {
     element = element || this.getContainer();
     data = data || this.data;
-    const comp = this.createComponent(component, this.options, data, before ? before.component : null);
+    const comp = this.createComponent(component, this.options, data, before ? before.component : null, state);
     if (noAdd) {
       return comp;
     }
-    this.setHidden(comp);
     element = this.hook('addComponent', element, comp, this);
     const compElement = comp.getElement();
     if (!compElement) {
@@ -195,6 +198,7 @@ export default class NestedComponent extends BaseComponent {
     else {
       element.appendChild(compElement);
     }
+    this.setHidden(comp);
     return comp;
   }
 
@@ -206,12 +210,13 @@ export default class NestedComponent extends BaseComponent {
    */
   removeComponent(component, components) {
     components = components || this.components;
-    component.destroy();
+    const state = component.destroy();
     const element = component.getElement();
     if (element && element.parentNode) {
       this.removeChildFrom(element, element.parentNode);
     }
     _.remove(components, { id: component.id });
+    return state;
   }
 
   /**
@@ -267,17 +272,24 @@ export default class NestedComponent extends BaseComponent {
    * @param element
    * @param data
    */
-  addComponents(element, data, options) {
+  addComponents(element, data, options, state) {
     element = element || this.getContainer();
     data = data || this.data;
     options = options || this.options;
+    state = state || {};
 
     if (options.components) {
       this.components = options.components;
     }
     else {
       const components = this.hook('addComponents', this.componentComponents, this) || [];
-      components.forEach((component) => this.addComponent(component, element, data));
+      components.forEach((component) => {
+        let compState = {};
+        if (state && state.components && state.components[component.key]) {
+          compState = state.components[component.key];
+        }
+        this.addComponent(component, element, data, null, null, compState);
+      });
     }
   }
 
@@ -353,6 +365,12 @@ export default class NestedComponent extends BaseComponent {
         }
       });
     }
+    // If hiding a nested component, clear all errors below.
+    if (!shown) {
+      this.getAllComponents().forEach(component => {
+        component.error = '';
+      });
+    }
     return shown;
   }
 
@@ -375,6 +393,10 @@ export default class NestedComponent extends BaseComponent {
   }
 
   calculateValue(data, flags) {
+    // Do not iterate into children and calculateValues if this nested component is conditionally hidden.
+    if (!this.conditionallyVisible()) {
+      return false;
+    }
     return this.getComponents().reduce(
       (changed, comp) => comp.calculateValue(data, flags) || changed,
       super.calculateValue(data, flags)
@@ -405,16 +427,30 @@ export default class NestedComponent extends BaseComponent {
     this.getComponents().forEach((comp) => comp.setPristine(pristine));
   }
 
-  destroy(all) {
-    super.destroy(all);
-    this.destroyComponents();
+  /**
+   * Destroys this component.
+   *
+   * @param state
+   */
+  destroy() {
+    const state = super.destroy() || {};
+    this.destroyComponents(state);
+    return state;
   }
 
-  destroyComponents() {
+  destroyComponents(state) {
+    state = state || {};
+    state.components = state.components || {};
     const components = this.components.slice();
-    components.forEach((comp) => this.removeComponent(comp, this.components));
+    components.forEach((comp) => {
+      const compState = this.removeComponent(comp, this.components);
+      if (comp.key && compState) {
+        state.components[comp.key] = compState;
+      }
+    });
     this.components = [];
     this.hidden = [];
+    return state;
   }
 
   set disabled(disabled) {
@@ -422,17 +458,12 @@ export default class NestedComponent extends BaseComponent {
   }
 
   setHidden(component) {
-    if (component.components && component.components.length) {
-      component.hideComponents(this.hidden);
-    }
-    else if (component.component.hidden) {
-      component.visible = false;
-    }
-    else if (this.hidden && this.hidden.includes(component.key)) {
-      component.visible = false;
-    }
-    else if (!component.conditionallyVisible()) {
-      component.visible = false;
+    if (
+      (component.component.hidden) ||
+      (this.hidden && this.hidden.includes(component.key)) ||
+      (!component.conditionallyVisible())
+    ) {
+      component.show(false, true);
     }
   }
 
@@ -494,7 +525,7 @@ export default class NestedComponent extends BaseComponent {
   }
 
   setCollapsed(element) {
-    if (!this.component.collapsible) {
+    if (!this.component.collapsible || this.options.builder) {
       return;
     }
 

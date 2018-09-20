@@ -22,6 +22,7 @@ Formio.registerComponent = Components.setComponent;
 function getOptions(options) {
   options = _.defaults(options, {
     submitOnEnter: false,
+    icons: Formio.icons || '',
     i18next,
   });
   if (!options.events) {
@@ -794,15 +795,17 @@ export default class Webform extends NestedComponent {
    */
   render() {
     return this.onElement.then(() => {
-      this.clear();
+      const state = this.clear();
       this.showElement(false);
-      clearTimeout(this.build());
+      clearTimeout(this.build(state));
       this.isBuilt = true;
       this.on('resetForm', () => this.resetValue());
       this.on('deleteSubmission', () => this.deleteSubmission());
       this.on('refreshData', () => this.updateValue());
       setTimeout(() => {
-        this.onChange();
+        this.onChange({
+          noEmit: true
+        });
         this.emit('render');
       }, 1);
     });
@@ -832,7 +835,7 @@ export default class Webform extends NestedComponent {
         this.alert = null;
       }
       catch (err) {
-        // ingore
+        // ignore
       }
     }
     if (message) {
@@ -851,13 +854,15 @@ export default class Webform extends NestedComponent {
   /**
    * Build the form.
    */
-  build() {
+  build(state) {
     this.on('submitButton', (options) => this.submit(false, options));
     this.on('checkValidity', (data) => this.checkValidity(data, true));
-    this.addComponents();
+    this.addComponents(null, null, null, state);
     this.on('requestUrl', (args) => (this.submitUrl(args.url,args.headers)));
     return setTimeout(() => {
-      this.onChange();
+      this.onChange({
+        noEmit: true
+      });
     }, 1);
   }
 
@@ -956,7 +961,9 @@ export default class Webform extends NestedComponent {
     value.isValid = this.checkData(value.data, flags);
     this.showElement(true);
     this.loading = false;
-    this.emit('change', value);
+    if (!flags || !flags.noEmit) {
+      this.emit('change', value);
+    }
   }
 
   checkData(data, flags) {
