@@ -214,6 +214,7 @@ export default class ButtonComponent extends BaseComponent {
             state: this.component.state || 'submitted'
           });
           break;
+        case 'saveDraft':
         case 'event':
           this.emit(this.interpolate(this.component.event), this.data);
           this.events.emit(this.interpolate(this.component.event), this.data);

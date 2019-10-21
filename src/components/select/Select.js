@@ -115,7 +115,8 @@ export default class SelectComponent extends BaseComponent {
   itemValue(data, forceUseValue = false) {
     if (_.isObject(data)) {
       if (this.component.valueProperty) {
-        return _.get(data, this.component.valueProperty);
+        var _d = _.get(data, this.component.valueProperty);
+        return !_d && forceUseValue ? data.value : _d ;
       }
 
       if (forceUseValue) {

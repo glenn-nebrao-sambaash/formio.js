@@ -46,6 +46,7 @@ export default class Formio {
     this.vId = '';
     this.vUrl = '';
     this.query = '';
+    this.platformAuth = '';  // for Sambaash Platform Auth token
 
     // Store the original path and options.
     this.path = path;
@@ -658,6 +659,10 @@ export default class Formio {
   }
 
   static makeRequest(formio, type, url, method, data, opts) {
+    if (Formio.getPlatformAuth()) {
+      url += (!(url.indexOf('?') !== -1) ? '?' : '&');
+      url += `p_auth=${Formio.getPlatformAuth()}`;
+    }
     if (!formio) {
       return Formio.makeStaticRequest(url, method, data, opts);
     }
@@ -972,6 +977,14 @@ export default class Formio {
 
   static getBaseUrl() {
     return Formio.baseUrl;
+  }
+
+  static setPlatformAuth(pAuth) {
+    Formio.platformAuth = pAuth;
+  }
+
+  static getPlatformAuth() {
+    return Formio.platformAuth;
   }
 
   static setApiUrl(url) {

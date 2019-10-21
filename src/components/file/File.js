@@ -722,6 +722,7 @@ export default class FileComponent extends BaseComponent {
             .then(fileInfo => {
               this.removeChildFrom(uploadStatus, this.uploadStatusList);
               fileInfo.originalName = file.name;
+              if (!this.dataValue) this.dataValue=[];
               this.dataValue.push(fileInfo);
               this.refreshDOM();
               this.triggerChange();
